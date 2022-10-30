@@ -2,6 +2,8 @@
 
 Appzinho para acompanhar os resultados das eleições em tempo real no Terminal!
 
+!["Exemplo do primeiro turno"](https://github.com/brunocbreis/eleicoes-2022/blob/main/tui-example.png)
+
 ## Como instalar
 
 Você precisa ter a linguagem Go instalada. No mac, é só fazer `brew install go`.
