@@ -9,7 +9,6 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/charmbracelet/bubbles/progress"
 	tea "github.com/charmbracelet/bubbletea"
 	"golang.org/x/text/cases"
 )
@@ -57,21 +56,18 @@ func Load(url string) tea.Cmd {
 
 			// Clean up numbers
 			num, _ := strconv.Atoi(m["n"].(string))
+			partido := Partido(num)
+
 			votes, _ := strconv.Atoi(m["vap"].(string))
 
 			// Put it all together
 			switch name {
-			case "Lula", "Fernando Haddad":
-				res = append(res, Results{Nome: name, Numero: num, Votos: votes, Progress: progLula})
-
-			case "Jair Bolsonaro":
-				res = append(res, Results{Nome: name, Numero: num, Votos: votes, Progress: progBolsonaro})
 
 			case "Tarcísio":
-				res = append(res, Results{Nome: "Tarcísio de Freitas", Numero: num, Votos: votes, Progress: progBolsonaro})
+				res = append(res, Results{Nome: "Tarcísio de Freitas", Partido: partido, Votos: votes, Progress: ProgressBar(coresPartidos[partido])})
 
 			default:
-				res = append(res, Results{Nome: name, Numero: num, Votos: votes, Progress: progress.New()})
+				res = append(res, Results{Nome: name, Partido: partido, Votos: votes, Progress: ProgressBar(coresPartidos[partido])})
 			}
 		}
 

@@ -7,7 +7,7 @@ import (
 )
 
 type Results struct {
-	Numero      int
+	Partido     Partido
 	Nome        string
 	Votos       int
 	Porcentagem float64

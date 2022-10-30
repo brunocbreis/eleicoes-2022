@@ -34,6 +34,7 @@ func (m model) ToString() string {
 		res := m.Results[i]
 
 		s += boldStyle.Render(res.Nome)
+		s += printer.Sprintf(" %s", nomePartidos[res.Partido])
 		s += "\n"
 		s += res.Progress.ViewAs(res.Porcentagem)
 		s += printer.Sprintf("\n%d votos", res.Votos)

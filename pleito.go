@@ -51,21 +51,6 @@ var nomeUF = map[Local]string{
 	sp: "São Paulo",
 }
 
-type Partido int
-
-var nomePartidos = map[Partido]string{
-	15: "MDB",
-	44: "União Brasil",
-	13: "PT",
-	40: "PSB",
-	22: "PL",
-	28: "PRTB",
-	45: "PSDB",
-	77: "Solidariedade",
-	55: "PSD",
-	10: "Republicanos",
-}
-
 // Nomes
 const (
 	prName  = "Presidente"
