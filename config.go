@@ -43,5 +43,5 @@ var boldStyle = lipgloss.NewStyle().
 	Bold(true)
 
 // Progress bars
-var emptyProg = []rune("-")[0]
+var emptyProg = []rune(" ")[0]
 var emptyShowPercentage = false
