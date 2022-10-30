@@ -3,11 +3,12 @@ package main
 import (
 	"time"
 
+	"github.com/charmbracelet/bubbles/key"
 	tea "github.com/charmbracelet/bubbletea"
 )
 
 func (m model) Init() tea.Cmd {
-	return Load
+	return Load(m.url)
 }
 
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
@@ -15,7 +16,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	// the Load cmd returns new results
 	case []Results:
-		m.Results = msg[:2]
+		m.Results = msg
 		m.UpdatePercentage()
 
 		m.Loading = false
@@ -25,17 +26,21 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	// key presses
 	case tea.KeyMsg:
-		switch msg.String() {
-		case "ctrl+c", "q":
+		switch {
+		case key.Matches(msg, DefaultKeyMap.Quit):
 			m.Quitting = true
+
 			return m, tea.Quit
 
-		case "r":
+		case key.Matches(msg, DefaultKeyMap.Refresh):
 			m.Loading = true
-			return m, Load
-		case "tab":
+			return m, Load(m.url)
+
+		case key.Matches(msg, DefaultKeyMap.TogglePleito):
 			m.TogglePleito()
-			return m, Load
+			m.Loading = true
+
+			return m, Load(m.url)
 		}
 
 	}
@@ -50,6 +55,10 @@ func (m model) View() string {
 		return ""
 	}
 
+	if len(m.Results) == 0 {
+		return "Carregando..."
+	}
+
 	// Give feedback if it takes too long to load
 	var loading string
 	if m.Loading {
@@ -58,26 +67,19 @@ func (m model) View() string {
 		loading = printer.Sprintf("Última atualização: %v", m.LastUpdate.Format("02/01/2006 15:04:05"))
 	}
 
-	// Pleito
-	var pleito string
-	if m.Pleito == federal {
-		pleito = "Presidente"
-	} else {
-		pleito = "Governador"
-	}
-
 	// Render output
 	var s string
 	s += "\n"
 
-	s += boldStyle.Render(printer.Sprint(title, " – ", pleito))
+	s += boldStyle.Render(printer.Sprint(title, " – ", m.Pleito.Name))
 	s += printer.Sprintf("\n\n%s", m.ToString())
 
 	s += printer.Sprintf("Total de votos apurados: %d", m.TotalVotes)
 
 	s += "\n\n"
 	s += helpStyle.Render(loading)
-	s += helpStyle.Render("\n'r': atualizar\t\t'q': sair")
+	s += "\n"
+	s += helpView()
 
 	return s
 }

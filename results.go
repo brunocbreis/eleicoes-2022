@@ -1,6 +1,8 @@
 package main
 
 import (
+	"sort"
+
 	"github.com/charmbracelet/bubbles/progress"
 )
 
@@ -17,9 +19,6 @@ func (r Results) String() string {
 	return s
 }
 
-type Pleito int
-
-const (
-	federal Pleito = iota
-	estadual_sp
-)
+func Sort(r []Results) {
+	sort.Slice(r, func(i, j int) bool { return r[i].Votos > r[j].Votos })
+}

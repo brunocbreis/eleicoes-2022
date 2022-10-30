@@ -1,8 +1,6 @@
 package main
 
 import (
-	"fmt"
-
 	"github.com/charmbracelet/bubbles/progress"
 	"github.com/charmbracelet/lipgloss"
 	"golang.org/x/text/language"
@@ -14,11 +12,14 @@ var printer = message.NewPrinter(lang)
 
 const title = "Resultado Eleições 2022"
 
-// PARA SELECIONAR O TURNO DAS ELEIÇÕES
-var pleito = 544 // segundo turno = 545
-var pointerPleito = &pleito
+const maxCandidatos = 2
 
-var url = fmt.Sprintf("https://resultados.tse.jus.br/oficial/ele2022/%d/dados-simplificados/br/br-c0001-e000%d-r.json", pleito, pleito)
+var defaultPleito = Pleito{
+	Name:   prName,
+	local:  br,
+	cargo:  presidente,
+	codigo: pres2T,
+}
 
 /* STYLING */
 // Lula Style
