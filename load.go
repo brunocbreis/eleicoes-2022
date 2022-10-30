@@ -71,7 +71,7 @@ func Load() tea.Msg {
 		}
 	}
 
-	res = UpdatePercentage(res)
+	// res = UpdatePercentage(res)
 
 	for i := range res {
 		res[i].Progress.Empty = emptyProg
@@ -79,26 +79,4 @@ func Load() tea.Msg {
 	}
 
 	return res
-}
-
-func UpdatePercentage(res []Results) []Results {
-	total := SumVotes(res)
-
-	for i := 0; i < len(res); i++ {
-		votes := res[i].Votos
-		res[i].Porcentagem = float64(votes) / float64(total)
-		// res[i].Porcentagem = .25 + float64(i)*0.15
-	}
-
-	return res
-}
-
-func SumVotes(r []Results) int {
-	var total int
-	for _, res := range r {
-		votes := res.Votos
-		total = total + votes
-	}
-
-	return total
 }

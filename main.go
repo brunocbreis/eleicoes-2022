@@ -6,30 +6,6 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 )
 
-type model struct {
-	Results    []Results
-	LastUpdate time.Time
-	Loading    bool
-	Quitting   bool
-	Pleito     Pleito
-}
-
-func (m model) ToString() string {
-	var s string
-	for _, res := range m.Results {
-		s += boldStyle.Render(res.Nome)
-		s += "\n"
-		s += res.Progress.ViewAs(res.Porcentagem)
-		s += printer.Sprintf("\n%d votos", res.Votos)
-		s += printer.Sprintf(" ⁕ %.2f", res.Porcentagem*100) + "%\n\n"
-	}
-	return s
-}
-
-func (m *model) TogglePleito() {
-	m.Pleito = 1 - m.Pleito
-}
-
 func (m model) Init() tea.Cmd {
 	return Load
 }
@@ -40,6 +16,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	// the Load cmd returns new results
 	case []Results:
 		m.Results = msg[:2]
+		m.UpdatePercentage()
 
 		m.Loading = false
 		m.LastUpdate = time.Now()
@@ -68,13 +45,20 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (m model) View() string {
-	if m.Loading {
-		return "Carregando..."
-	}
+	// Clear screen before quitting
 	if m.Quitting {
 		return ""
 	}
 
+	// Give feedback if it takes too long to load
+	var loading string
+	if m.Loading {
+		loading = "Carregando..."
+	} else {
+		loading = printer.Sprintf("Última atualização: %v", m.LastUpdate.Format("02/01/2006 15:04:05"))
+	}
+
+	// Pleito
 	var pleito string
 	if m.Pleito == federal {
 		pleito = "Presidente"
@@ -82,22 +66,24 @@ func (m model) View() string {
 		pleito = "Governador"
 	}
 
+	// Render output
 	var s string
 	s += "\n"
+
 	s += boldStyle.Render(printer.Sprint(title, " – ", pleito))
 	s += printer.Sprintf("\n\n%s", m.ToString())
 
-	s += printer.Sprintf("Total de votos apurados: %d", SumVotes(m.Results))
+	s += printer.Sprintf("Total de votos apurados: %d", m.TotalVotes)
 
 	s += "\n\n"
-	s += helpStyle.Render(printer.Sprintf("Última atualização: %v", m.LastUpdate.Format("02/01/2006 15:04:05")))
+	s += helpStyle.Render(loading)
 	s += helpStyle.Render("\n'r': atualizar\t\t'q': sair")
 
 	return s
 }
 
 func main() {
-	p := tea.NewProgram(model{Pleito: federal})
+	p := tea.NewProgram(NewModel())
 	err := p.Start()
 	if err != nil {
 		panic(err)

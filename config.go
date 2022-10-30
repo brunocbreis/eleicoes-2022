@@ -16,6 +16,8 @@ const title = "Resultado Eleições 2022"
 
 // PARA SELECIONAR O TURNO DAS ELEIÇÕES
 var pleito = 544 // segundo turno = 545
+var pointerPleito = &pleito
+
 var url = fmt.Sprintf("https://resultados.tse.jus.br/oficial/ele2022/%d/dados-simplificados/br/br-c0001-e000%d-r.json", pleito, pleito)
 
 /* STYLING */
