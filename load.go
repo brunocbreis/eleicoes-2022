@@ -9,6 +9,7 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/charmbracelet/bubbles/progress"
 	tea "github.com/charmbracelet/bubbletea"
 	"golang.org/x/text/cases"
 )
@@ -58,15 +59,24 @@ func Load() tea.Msg {
 		votes, _ := strconv.Atoi(m["vap"].(string))
 
 		// Put it all together
-		res = append(res, Results{Nome: name, Numero: num, Votos: votes})
+		switch name {
+		case "Lula", "Fernando Haddad":
+			res = append(res, Results{Nome: name, Numero: num, Votos: votes, Progress: progLula})
+
+		case "Jair Bolsonaro", "Tarcísio de Freitas":
+			res = append(res, Results{Nome: name, Numero: num, Votos: votes, Progress: progBolsonaro})
+
+		default:
+			res = append(res, Results{Nome: name, Numero: num, Votos: votes, Progress: progress.New()})
+		}
 	}
 
-	// total := SumVotes(res)
+	res = UpdatePercentage(res)
 
-	// for i := 0; i < len(res); i++ {
-	// 	votes := res[i].Votos
-	// 	res[i].Porcentagem = float64(votes / total)
-	// }
+	for i := range res {
+		res[i].Progress.Empty = emptyProg
+		res[i].Progress.ShowPercentage = emptyShowPercentage
+	}
 
 	return res
 }

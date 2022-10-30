@@ -16,3 +16,10 @@ func (r Results) String() string {
 	s := printer.Sprintf("\nCandidato: %s\nVotos: %d\n", r.Nome, r.Votos)
 	return s
 }
+
+type Pleito int
+
+const (
+	federal Pleito = iota
+	estadual_sp
+)

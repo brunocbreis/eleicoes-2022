@@ -27,10 +27,18 @@ var (
 
 // Bolsonaro Style
 var (
-	colorBolsonaro = "#34923F"
+	colorBolsonaro = "#1D2FC7"
 	progBolsonaro  = progress.New(progress.WithSolidFill(colorBolsonaro))
 )
 
 // Help Stype
 var helpStyle = lipgloss.NewStyle().
 	Foreground(lipgloss.Color("241"))
+
+// Bold Style
+var boldStyle = lipgloss.NewStyle().
+	Bold(true)
+
+// Progress bars
+var emptyProg = []rune("-")[0]
+var emptyShowPercentage = false
