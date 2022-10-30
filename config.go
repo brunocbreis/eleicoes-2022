@@ -34,7 +34,7 @@ var (
 	progBolsonaro  = progress.New(progress.WithSolidFill(colorBolsonaro))
 )
 
-// Help Stype
+// Help Style
 var helpStyle = lipgloss.NewStyle().
 	Foreground(lipgloss.Color("241"))
 
