@@ -7,6 +7,7 @@ import (
 
 type model struct {
 	url        string
+	uf         Local
 	Results    []Results
 	TotalVotes int
 	LastUpdate time.Time
@@ -15,8 +16,8 @@ type model struct {
 	Pleito     Pleito
 }
 
-func NewModel() model {
-	m := model{Pleito: defaultPleito}
+func NewModel(uf Local) model {
+	m := model{Pleito: pleitoPresidente(), uf: uf}
 	m.UpdateURL()
 
 	return m
@@ -66,16 +67,10 @@ func (m *model) SumVotes() {
 func (m *model) TogglePleito() {
 	switch m.Pleito.Name {
 	case prName:
-		m.Pleito.cargo = governador
-		m.Pleito.codigo = gov2T
-		m.Pleito.local = sp
-		m.Pleito.Name = govName
+		m.Pleito = pleitoEstado(m.uf)
 
 	case govName:
-		m.Pleito.cargo = presidente
-		m.Pleito.codigo = pres2T
-		m.Pleito.local = br
-		m.Pleito.Name = prName
+		m.Pleito = pleitoPresidente()
 	}
 	m.UpdateURL()
 }

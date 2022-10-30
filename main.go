@@ -1,6 +1,7 @@
 package main
 
 import (
+	"os"
 	"time"
 
 	"github.com/charmbracelet/bubbles/key"
@@ -72,6 +73,7 @@ func (m model) View() string {
 	s += "\n"
 
 	s += boldStyle.Render(printer.Sprint(title, " – ", m.Pleito.Name))
+	s += printer.Sprintf(" (%s)", nomeUF[m.Pleito.local])
 	s += printer.Sprintf("\n\n%s", m.ToString())
 
 	s += printer.Sprintf("Total de votos apurados: %d", m.TotalVotes)
@@ -85,7 +87,17 @@ func (m model) View() string {
 }
 
 func main() {
-	p := tea.NewProgram(NewModel(), tea.WithAltScreen())
+	var estado Local
+
+	if len(os.Args) > 1 {
+		estado = Local(os.Args[1])
+	}
+
+	if _, ok := nomeUF[estado]; !ok {
+		estado = "sp"
+	}
+
+	p := tea.NewProgram(NewModel(estado), tea.WithAltScreen())
 	err := p.Start()
 	if err != nil {
 		panic(err)

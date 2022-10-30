@@ -18,10 +18,53 @@ const (
 
 type Local string
 
+// UFs com segundo turno
 const (
 	br Local = "br"
+	al Local = "al"
+	am Local = "am"
+	ba Local = "ba"
+	es Local = "es"
+	ms Local = "ms"
+	pb Local = "pb"
+	pe Local = "pe"
+	rs Local = "rs"
+	rr Local = "rr"
+	sc Local = "sc"
+	se Local = "se"
 	sp Local = "sp"
 )
+
+var nomeUF = map[Local]string{
+	br: "Brasil",
+	al: "Alagoas",
+	am: "Amazonas",
+	ba: "Bahia",
+	es: "Espírito Santo",
+	ms: "Mato Grosso do Sul",
+	pb: "Paraíba",
+	pe: "Pernambuco",
+	rs: "Rio Grande do Sul",
+	rr: "Roraima",
+	sc: "Santa Catarina",
+	se: "Sergipe",
+	sp: "São Paulo",
+}
+
+type Partido int
+
+var nomePartidos = map[Partido]string{
+	15: "MDB",
+	44: "União Brasil",
+	13: "PT",
+	40: "PSB",
+	22: "PL",
+	28: "PRTB",
+	45: "PSDB",
+	77: "Solidariedade",
+	55: "PSD",
+	10: "Republicanos",
+}
 
 // Nomes
 const (

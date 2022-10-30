@@ -14,11 +14,22 @@ const title = "Resultado Eleições 2022"
 
 const maxCandidatos = 2
 
-var defaultPleito = Pleito{
-	Name:   prName,
-	local:  br,
-	cargo:  presidente,
-	codigo: pres2T,
+func pleitoPresidente() Pleito {
+	return Pleito{
+		Name:   prName,
+		local:  "br",
+		cargo:  presidente,
+		codigo: pres2T,
+	}
+}
+
+func pleitoEstado(uf Local) Pleito {
+	return Pleito{
+		Name:   govName,
+		local:  uf,
+		cargo:  governador,
+		codigo: gov2T,
+	}
 }
 
 /* STYLING */
