@@ -7,20 +7,17 @@ import (
 	"net/http"
 	"os"
 	"strconv"
-	"strings"
+	"time"
 
 	tea "github.com/charmbracelet/bubbletea"
 	"golang.org/x/text/cases"
-	"golang.org/x/text/language"
 )
 
-var pleito = 544 // segundo turno = 545
-var url = fmt.Sprintf("https://resultados.tse.jus.br/oficial/ele2022/%d/dados-simplificados/br/br-c0001-e000%d-r.json", pleito, pleito)
-
 func getResults(url string, target interface{}) error {
+	c := &http.Client{Timeout: 10 * time.Second}
 
 	// getting response
-	res, err := http.Get(url)
+	res, err := c.Get(url)
 	if err != nil {
 		fmt.Println("Error fetching results.", err)
 		os.Exit(1)
@@ -53,24 +50,45 @@ func Load() tea.Msg {
 	for _, m := range candMaps {
 		// Clean up Names
 		name := m["nm"].(string)
-		// name = strings.ToLower(name)
-
-		caser := cases.Title(language.BrazilianPortuguese)
+		caser := cases.Title(lang)
 		name = caser.String(name)
-
-		// Clean Felipe D'Ávila
-		name = strings.Replace(name, "&Apos;", "'", 1)
 
 		// Clean up numbers
 		num, _ := strconv.Atoi(m["n"].(string))
 		votes, _ := strconv.Atoi(m["vap"].(string))
 
-		// Create candidates
-		cd := Candidato{Nome: name, Numero: num}
-
 		// Put it all together
-		res = append(res, Results{Candidato: cd, Votos: votes})
+		res = append(res, Results{Nome: name, Numero: num, Votos: votes})
+	}
+
+	// total := SumVotes(res)
+
+	// for i := 0; i < len(res); i++ {
+	// 	votes := res[i].Votos
+	// 	res[i].Porcentagem = float64(votes / total)
+	// }
+
+	return res
+}
+
+func UpdatePercentage(res []Results) []Results {
+	total := SumVotes(res)
+
+	for i := 0; i < len(res); i++ {
+		votes := res[i].Votos
+		res[i].Porcentagem = float64(votes) / float64(total)
+		// res[i].Porcentagem = .25 + float64(i)*0.15
 	}
 
 	return res
+}
+
+func SumVotes(r []Results) int {
+	var total int
+	for _, res := range r {
+		votes := res.Votos
+		total = total + votes
+	}
+
+	return total
 }
